@@ -1,0 +1,74 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <!-- Complex gradients for depth -->
+        <radialGradient id="bg-gradient1" cx="30%" cy="40%" r="70%">
+            <stop offset="0%" stop-color="#1a237e" stop-opacity="0.3"/>
+            <stop offset="50%" stop-color="#6a1b9a" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0.9"/>
+        </radialGradient>
+        
+        <radialGradient id="bg-gradient2" cx="70%" cy="60%" r="80%">
+            <stop offset="0%" stop-color="#2e7d32" stop-opacity="0.2"/>
+            <stop offset="70%" stop-color="#1a237e" stop-opacity="0.1"/>
+            <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0.8"/>
+        </radialGradient>
+        
+        <!-- Pattern for mesh effect -->
+        <pattern id="mesh" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+            <path d="M 0 50 L 100 50 M 50 0 L 50 100" stroke="#2e7d32" stroke-width="0.2" opacity="0.1"/>
+        </pattern>
+        
+        <!-- Car silhouette pattern -->
+        <pattern id="cars" x="0" y="0" width="200" height="100" patternUnits="userSpaceOnUse">
+            <path d="M30,50 L50,30 L70,30 L90,50 L110,50 L130,30 L150,30 L170,50" 
+                  stroke="#6a1b9a" stroke-width="1" fill="none" opacity="0.05"/>
+        </pattern>
+    </defs>
+    
+    <!-- Base dark background -->
+    <rect width="1920" height="1080" fill="#0a0a0a"/>
+    
+    <!-- Gradient overlays -->
+    <rect width="1920" height="1080" fill="url(#bg-gradient1)"/>
+    <rect width="1920" height="1080" fill="url(#bg-gradient2)"/>
+    
+    <!-- Mesh grid -->
+    <rect width="1920" height="1080" fill="url(#mesh)"/>
+    
+    <!-- Car patterns -->
+    <rect width="1920" height="1080" fill="url(#cars)"/>
+    
+    <!-- Floating particles with Toyota colors -->
+    <g id="floating-particles">
+        <circle cx="300" cy="200" r="3" fill="#2e7d32" opacity="0.2">
+            <animate attributeName="cy" values="200;220;200" dur="8s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="800" cy="400" r="4" fill="#6a1b9a" opacity="0.2">
+            <animate attributeName="cy" values="400;380;400" dur="7s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="1200" cy="600" r="3" fill="#1a237e" opacity="0.2">
+            <animate attributeName="cy" values="600;620;600" dur="9s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="1500" cy="300" r="4" fill="#2e7d32" opacity="0.2">
+            <animate attributeName="cy" values="300;280;300" dur="6s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="500" cy="800" r="3" fill="#6a1b9a" opacity="0.2">
+            <animate attributeName="cy" values="800;820;800" dur="8s" repeatCount="indefinite"/>
+        </circle>
+    </g>
+    
+    <!-- Light rays -->
+    <g opacity="0.1">
+        <line x1="0" y1="0" x2="1920" y2="1080" stroke="#ffffff" stroke-width="2"/>
+        <line x1="1920" y1="0" x2="0" y2="1080" stroke="#ffffff" stroke-width="2"/>
+        <line x1="960" y1="0" x2="960" y2="1080" stroke="#ffffff" stroke-width="1"/>
+        <line x1="0" y1="540" x2="1920" y2="540" stroke="#ffffff" stroke-width="1"/>
+    </g>
+    
+    <!-- Vignette effect -->
+    <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
+        <stop offset="0%" stop-color="transparent"/>
+        <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0.7"/>
+    </radialGradient>
+    <rect width="1920" height="1080" fill="url(#vignette)"/>
+</svg>
