@@ -2,120 +2,105 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Golf for Good | Track. Win. Give.</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Query Interface</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">⛳ Golf for Good</div>
-            <div class="nav-links">
-                <a href="#how-it-works">How It Works</a>
-                <a href="#charities">Charities</a>
-                <a href="#draw">The Draw</a>
-                <a href="dashboard.html" class="btn-outline">Dashboard</a>
-                <a href="#" id="subscribeBtnNav" class="btn-primary">Subscribe →</a>
-            </div>
-            <div class="mobile-menu-btn" id="mobileMenuBtn">☰</div>
-        </div>
-    </nav>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <h1><i class="fas fa-search"></i> Product Query System</h1>
+            <p>Enter natural language queries to find products</p>
+        </header>
 
-    <main>
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="hero-content">
-                <div class="hero-badge">🏌️‍♂️ Charity-Powered Golf</div>
-                <h1>Your best golf <span class="gradient-text">changes lives.</span></h1>
-                <p class="hero-subtext">Enter your Stableford scores. Win monthly draws. 10%+ supports charities you choose.</p>
-                <div class="hero-buttons">
-                    <button class="btn-primary-large" id="subscribeHeroBtn">Start Playing →</button>
-                    <button class="btn-secondary" id="exploreBtn">Explore Charities</button>
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Query Input Section -->
+            <section class="query-section card">
+                <h2><i class="fas fa-comment-alt"></i> Submit Your Query</h2>
+                <div class="form-group">
+                    <label for="queryInput">
+                        <i class="fas fa-keyboard"></i> Enter your query (e.g., "Show me electronics", "Find books"):
+                    </label>
+                    <textarea 
+                        id="queryInput" 
+                        placeholder="Type your query here... Example: 'I want to see electronic products'"
+                        rows="3"
+                    ></textarea>
                 </div>
-                <div class="stats-row">
-                    <div class="stat"><span>$12,450+</span> raised for charity</div>
-                    <div class="stat"><span>847</span> active golfers</div>
-                    <div class="stat"><span>$8,200</span> current jackpot</div>
+                <div class="button-group">
+                    <button id="submitQuery" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Submit Query
+                    </button>
+                    <button id="clearAll" class="btn btn-secondary">
+                        <i class="fas fa-trash"></i> Clear All
+                    </button>
                 </div>
-            </div>
-        </section>
-
-        <!-- How It Works -->
-        <section id="how-it-works" class="how-section">
-            <div class="container">
-                <h2 class="section-title">How it works — <span class="pink-text">simple & powerful</span></h2>
-                <div class="steps-grid">
-                    <div class="step-card">
-                        <div class="step-number">1</div>
-                        <div class="step-icon">💳</div>
-                        <h3>Subscribe</h3>
-                        <p>Monthly ($12) or Yearly ($120 — save 17%). 10% minimum goes to charity.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">2</div>
-                        <div class="step-icon">⛳</div>
-                        <h3>Enter Scores</h3>
-                        <p>Log your last 5 Stableford scores (1-45 points). We keep rolling history.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">3</div>
-                        <div class="step-icon">🎲</div>
-                        <h3>Monthly Draw</h3>
-                        <p>Random or algorithm-weighted draw. Match 3,4, or 5 numbers to win.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">4</div>
-                        <div class="step-icon">❤️</div>
-                        <h3>Win & Give</h3>
-                        <p>Prizes paid after verification. Charity gets their share automatically.</p>
+                
+                <!-- System Status -->
+                <div class="status-container">
+                    <div id="connectionStatus" class="status-indicator">
+                        <span class="status-dot"></span>
+                        <span>Backend Connection: Checking...</span>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Charities Preview -->
-        <section id="charities" class="charities-section">
-            <div class="container">
-                <h2 class="section-title">Choose your <span class="skyblue-text">impact</span></h2>
-                <div class="charity-grid" id="charityGrid">
-                    <!-- Dynamically loaded from JS -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Draw Mechanics -->
-        <section id="draw" class="draw-section">
-            <div class="container">
-                <h2 class="section-title">The <span class="orange-text">Monthly Draw</span></h2>
-                <div class="draw-card">
-                    <div class="draw-pool">
-                        <div class="pool-tier">🎯 5-Number Match — <strong>40% (Jackpot)</strong> <span class="rollover">Rollover if unclaimed</span></div>
-                        <div class="pool-tier">⭐ 4-Number Match — <strong>35%</strong></div>
-                        <div class="pool-tier">✨ 3-Number Match — <strong>25%</strong></div>
-                    </div>
-                    <div class="draw-logic">
-                        <p><strong>Draw Logic:</strong> Admin selects Random OR Algorithmic (weighted by most/least frequent scores)</p>
-                        <p><strong>Monthly cadence:</strong> Results published 1st of each month</p>
+            <!-- Results Section -->
+            <section class="results-section">
+                <!-- Query History -->
+                <div class="card history-card">
+                    <h3><i class="fas fa-history"></i> Query History</h3>
+                    <div id="queryHistory" class="history-list">
+                        <!-- Query history will be inserted here by JavaScript -->
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- CTA Footer -->
-        <section class="cta-footer">
-            <div class="container">
-                <h2>Ready to change the game?</h2>
-                <button class="btn-primary-large" id="subscribeFooterBtn">Subscribe Now — $12/month</button>
-                <p class="tiny-text">Cancel anytime. 100% of prize pool paid out.</p>
-            </div>
-        </section>
-    </main>
+                <!-- Response Display -->
+                <div class="card response-card">
+                    <h3><i class="fas fa-reply"></i> System Response</h3>
+                    <div id="responseContainer" class="response-content">
+                        <p class="placeholder-text">Submit a query to see the response here...</p>
+                    </div>
+                </div>
 
-    <footer>
-        <p>© 2025 Golf for Good — Charity-powered golf platform</p>
-    </footer>
+                <!-- Product Table -->
+                <div class="card table-card">
+                    <h3><i class="fas fa-table"></i> Product Details</h3>
+                    <div class="table-container">
+                        <table id="productTable">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-tag"></i> Product Name</th>
+                                    <th><i class="fas fa-dollar-sign"></i> Price</th>
+                                    <th><i class="fas fa-folder"></i> Category</th>
+                                    <th><i class="fas fa-info-circle"></i> Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productTableBody">
+                                <tr class="empty-row">
+                                    <td colspan="4">No products to display. Enter a query to search.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
 
-    <script src="script.js"></script>
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Text Query Interface | ACID Compliant Transactions | Modular Frontend Architecture</p>
+            <p class="backend-status">Backend: <span id="backendUrl">http://localhost:8000</span></p>
+        </footer>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script type="module" src="scripts/api.js"></script>
+    <script type="module" src="scripts/ui.js"></script>
+    <script type="module" src="scripts/app.js"></script>
 </body>
 </html>
