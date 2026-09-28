@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Toyota Chat • Real-Time Messenger</title>
+    
+    <!-- Meta tags for mobile and PWA -->
+    <meta name="theme-color" content="#2e7d32">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Real-time chat application with Toyota-inspired design">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/toyota-logo.svg">
+    <link rel="alternate icon" href="assets/favicon.ico">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Preload important assets -->
+    <link rel="preload" href="assets/logo-animation.svg" as="image">
+    <link rel="preload" href="assets/chat-background.svg" as="image">
+</head>
+<body>
+    <div class="app-container" style="background: url('assets/chat-background.svg') no-repeat center center fixed; background-size: cover;">
+        <!-- Login/Register Section -->
+        <div class="auth-section" id="authSection">
+            <div class="auth-container glass-effect">
+                <img src="assets/logo-animation.svg" alt="Toyota Logo" class="toyota-logo logo-animated">
+                <h2 class="neon-text">Welcome to Toyota Chat</h2>
+                <div class="input-group">
+                    <input type="text" id="username" placeholder="Username" class="auth-input" autocomplete="off">
+                    <input type="password" id="password" placeholder="Password" class="auth-input" autocomplete="off">
+                </div>
+                <div class="auth-buttons">
+                    <button onclick="login()" class="btn btn-primary btn-hover-effect">Login</button>
+                    <button onclick="register()" class="btn btn-secondary btn-hover-effect">Register</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Chat Section (Initially Hidden) -->
+        <div class="chat-section hidden" id="chatSection">
+            <!-- Sidebar -->
+            <div class="sidebar glass-effect">
+                <div class="user-profile">
+                    <img src="assets/logo-animation.svg" alt="Logo" class="profile-logo logo-pulse">
+                    <span id="currentUser">Loading...</span>
+                    <div class="status-indicator online" id="userStatus"></div>
+                </div>
+                
+                <div class="sidebar-nav">
+                    <button onclick="showChatrooms()" class="nav-btn active" data-tooltip="Chat Rooms">
+                        <i class="fas fa-users"></i> Chat Rooms
+                    </button>
+                    <button onclick="showPrivateChats()" class="nav-btn" data-tooltip="Private Chats">
+                        <i class="fas fa-user"></i> Private
+                    </button>
+                </div>
+
+                <!-- Chat Rooms List -->
+                <div id="roomsList" class="rooms-list custom-scrollbar">
+                    <div class="list-header">
+                        <h3>Chat Rooms</h3>
+                        <button onclick="createRoom()" class="btn-icon" data-tooltip="Create Room">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="room-item active" onclick="joinRoom('general')">
+                        <i class="fas fa-hashtag" style="color: var(--green);"></i> general
+                        <span class="user-count">5</span>
+                    </div>
+                    <div class="room-item" onclick="joinRoom('tech')">
+                        <i class="fas fa-hashtag" style="color: var(--purple);"></i> tech
+                        <span class="user-count">3</span>
+                    </div>
+                    <div class="room-item" onclick="joinRoom('random')">
+                        <i class="fas fa-hashtag" style="color: var(--navy-blue);"></i> random
+                        <span class="user-count">2</span>
+                    </div>
+                </div>
+
+                <!-- Users List -->
+                <div id="usersList" class="users-list custom-scrollbar hidden">
+                    <h3>Online Users</h3>
+                    <div class="user-item online" onclick="startPrivateChat('John Doe')">
+                        <i class="fas fa-circle"></i> John Doe
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Chat Area -->
+            <div class="chat-area">
+                <!-- Chat Header -->
+                <div class="chat-header glass-effect">
+                    <h2 id="currentChat" class="neon-text">General Chat</h2>
+                    <div class="header-actions">
+                        <button onclick="toggleSound()" class="btn-icon" data-tooltip="Toggle Sound">
+                            <i class="fas fa-volume-up"></i>
+                        </button>
+                        <button onclick="toggleNotifications()" class="btn-icon" data-tooltip="Toggle Notifications">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <button onclick="logout()" class="btn-icon" data-tooltip="Logout">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Messages Container -->
+                <div class="messages-container custom-scrollbar" id="messagesContainer">
+                    <!-- Messages will be dynamically added here -->
+                </div>
+
+                <!-- Message Input Area -->
+                <div class="message-input-area glass-effect">
+                    <div class="input-wrapper">
+                        <button onclick="attachFile()" class="btn-icon" data-tooltip="Attach File">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <input type="text" id="messageInput" placeholder="Type a message... (Ctrl+K to focus)" 
+                               onkeypress="handleKeyPress(event)" autocomplete="off">
+                        <button onclick="sendMessage()" class="btn-send btn-hover-effect" data-tooltip="Send Message">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="file-preview hidden" id="filePreview">
+                        <span id="fileName"></span>
+                        <button onclick="clearFile()">×</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="notification-container"></div>
+
+    <!-- Sound Generator Script -->
+    <script src="js/sound-generator.js"></script>
+    <!-- Main Chat Script -->
+    <script src="js/chat.js"></script>
+    <!-- UI Enhancement Script -->
+    <script src="js/ui.js"></script>
+    <!-- Theme Manager Script -->
+    <script src="js/theme-manager.js"></script>
+    
+    <!-- Initialize everything -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add keyboard shortcut hint
+            console.log('🎯 Toyota Chat loaded! Press Ctrl+K to focus message input');
+        });
+    </script>
+</body>
+</html>

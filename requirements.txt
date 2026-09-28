@@ -1,0 +1,23 @@
+# WebSocket support
+websockets==12.0
+
+# ASGI server for production
+uvicorn==0.24.0
+
+# Optional: For better JSON handling
+orjson==3.9.7
+
+# Optional: For password hashing
+bcrypt==4.0.1
+
+# Optional: For environment variables
+python-dotenv==1.0.0
+
+# Optional: For CORS if needed
+aiohttp-cors==0.7.0
+
+# Optional: For file upload handling
+aiofiles==23.2.1
+
+# Optional: For better logging
+loguru==0.7.2
