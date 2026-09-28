@@ -1,6 +1,7 @@
-// Main Application Module - Orchestrates everything
+// Main Application Module
 import { api } from './api.js';
 import { uiManager } from './ui.js';
+import { imageProcessor } from './imageProcessor.js';
 
 class Application {
     constructor() {
@@ -8,68 +9,120 @@ class Application {
     }
 
     async initializeApp() {
-        console.log('Initializing Text Query Interface...');
+        console.log('Initializing Handwritten Image Query System...');
         
-        // Check backend connection
-        await this.checkBackendConnection();
+        // Update backend URL display
+        uiManager.elements.backendUrl.textContent = api.baseURL;
         
-        // Set up event listeners
+        // Check backend health
+        await this.checkSystemStatus();
+        
+        // Load query history
+        await this.loadQueryHistory();
+        
+        // Setup event listeners
         this.setupEventListeners();
         
-        // Initialize history from localStorage
-        this.loadHistory();
+        console.log('System ready!');
     }
 
-    async checkBackendConnection() {
-        const isConnected = await api.checkConnection();
-        uiManager.updateConnectionStatus(isConnected);
-        
-        if (!isConnected) {
-            console.warn('Backend not connected. Make sure FastAPI is running on http://localhost:8000');
+    async checkSystemStatus() {
+        try {
+            // Check backend
+            const health = await api.checkHealth();
+            uiManager.updateBackendStatus(health.status === 'healthy' ? 'Connected' : 'Disconnected');
+            
+            // Check OCR
+            const ocr = await api.checkOCRStatus();
+            uiManager.updateOCRStatus(ocr.status === 'ready' ? 'Ready' : 'Not Available');
+            
+            if (health.status !== 'healthy') {
+                console.warn('Backend not connected. Make sure FastAPI is running.');
+            }
+        } catch (error) {
+            uiManager.updateBackendStatus('Disconnected');
+            uiManager.updateOCRStatus('Not Available');
+            console.error('System status check failed:', error);
         }
-        
-        return isConnected;
+    }
+
+    async loadQueryHistory() {
+        try {
+            const response = await api.getQueryHistory(5);
+            if (response.history) {
+                uiManager.updateQueryHistory(response.history);
+            }
+        } catch (error) {
+            console.error('Failed to load history:', error);
+        }
     }
 
     setupEventListeners() {
-        // Listen for query submission from UI
-        document.addEventListener('querySubmitted', async (event) => {
-            const query = event.detail.query;
-            await this.processQuery(query);
+        // Listen for image processing
+        document.addEventListener('imageProcessing', async (event) => {
+            await this.handleImageProcessing(event.detail);
         });
     }
 
-    async processQuery(query) {
+    async handleImageProcessing(detail) {
         try {
-            // Send query to backend
-            const response = await api.submitQuery(query);
+            // Show loading state
+            uiManager.showLoading('Processing image and extracting text...');
+            imageProcessor.disableProcessButton();
             
-            // Update UI with response
-            uiManager.updateResponse(response);
+            // Step 1: Process image through backend
+            const result = await api.processImage(detail.image);
+            
+            if (!result || !result.extracted_text) {
+                throw new Error('Could not extract text from image');
+            }
+            
+            // Update extracted text in UI
+            imageProcessor.updateExtractedText(result.extracted_text);
+            
+            // Step 2: Submit extracted text as query
+            uiManager.showLoading('Searching for products...');
+            
+            const queryResult = await api.submitQuery(result.extracted_text);
+            
+            // Update results
+            uiManager.updateResults({
+                ...queryResult,
+                original_query: result.extracted_text
+            });
+            
+            // Update product table
+            uiManager.updateProductTable(queryResult.products || []);
+            
+            // Reload history
+            await this.loadQueryHistory();
+            
+            // Show success
+            if (typeof toastr !== 'undefined') {
+                toastr.success('Image processed successfully!');
+            }
             
         } catch (error) {
-            console.error('Error processing query:', error);
-            uiManager.showError('Failed to process query. Please check backend connection.');
-            uiManager.setLoadingState(false);
+            console.error('Image processing failed:', error);
+            uiManager.showError(`Processing failed: ${error.message}`);
+            
+            if (typeof toastr !== 'undefined') {
+                toastr.error('Failed to process image');
+            }
+        } finally {
+            // Reset button state
+            imageProcessor.resetProcessButton();
         }
-    }
-
-    loadHistory() {
-        // Load from localStorage (optional enhancement)
-        const savedHistory = localStorage.getItem('queryHistory');
-        if (savedHistory) {
-            uiManager.queryHistory = JSON.parse(savedHistory);
-            uiManager.updateHistoryDisplay();
-        }
-    }
-
-    saveHistory() {
-        localStorage.setItem('queryHistory', JSON.stringify(uiManager.queryHistory));
     }
 }
 
-// Initialize the application when DOM is loaded
+// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     const app = new Application();
-    console.log('Text Query Interface is ready!');
+    
+    // Add global function for product view
+    window.viewProduct = (index) => {
+        alert(`Viewing product at index ${index}`);
+        // In real app, would show detailed view/modal
+    };
 });
